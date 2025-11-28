@@ -138,7 +138,7 @@ Return value — code error:
 *Note on the conversion of a float type number:*
 - *If the numbers are too small (0 < |x| < 1e-28), return an error and value equal to 0*.
 - *If the numbers are too large (|x| > 79,228,162,514,264,337,593,543,950,335) or are equal to infinity, return an error*.
-- *When processing a number with the float type, convert all the significant decimal digits contained in it. If there are more than 7 such digits, the number is rounded to the closest one that does not have more than 7 significant decimal digits.*
+- *When processing a number with the float type, convert all the significant decimal digits contained in it. If there are more than 7 such digits, the number is rounded using bank rounding to the number that does not have more than 7 significant decimal digits.*
 
 *Note on the conversion from decimal type to int:*
 - *If there is a fractional part in a decimal number, it should be discarded (for example, 0.9 is converted to 0)*.
