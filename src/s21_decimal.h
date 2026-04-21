@@ -1,7 +1,8 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
 
-#include <stdio.h>
+#include "functions/other/other.h"
+#include "functions/conversion/conversion.h"
 
 typedef struct {
     unsigned int bits[4];
@@ -32,5 +33,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst);
 // int s21_truncate(s21_decimal value, s21_decimal *result);
 // int s21_round(s21_decimal value, s21_decimal *result);
 // int s21_floor(s21_decimal value, s21_decimal *result);
+
+void s21_zero(s21_decimal *value);
 
 #endif
