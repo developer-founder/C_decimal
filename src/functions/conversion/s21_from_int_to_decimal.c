@@ -1,11 +1,11 @@
-#include "../s21_decimal.h"
+#include "../helpers/helpers.h"
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-    s21_conversion_result code = S21_CONVERSION_ERROR;
+    int code = CALCULATION_ERROR;
     int sign = 0;
 
     if (dst) {
-        code = S21_CONVERSION_OK;
+        code = SUCCESS;
         s21_zero(dst);
 
         if (src < 0) {
