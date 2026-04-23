@@ -2,9 +2,9 @@
 #include "../helpers/helpers.h"
 
 int s21_truncate(s21_decimal value, s21_decimal *result) {
-    int code = SUCCESS;
+    int status = SUCCESS;
     if (!result) {
-        code = CALCULATION_ERROR;
+        status = CALCULATION_ERROR;
     } else {
         *result = value;
         int scale = s21_get_scale(value);
@@ -17,5 +17,5 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
         s21_set_scale(result, 0);
     }
 
-    return code;
+    return status;
 }

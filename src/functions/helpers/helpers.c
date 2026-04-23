@@ -23,12 +23,13 @@ void s21_set_scale(s21_decimal *value, int scale) {
     value->bits[3] &= ~(0xFF << 16);
     value->bits[3] |= (scale << 16);
 }
+// [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 int s21_get_scale(s21_decimal value) {
     return (value.bits[3] >> 16) & 0xFF; // маска 8 бит
 }
 
-void s21_shift_right_10(s21_decimal *value) {
+unsigned long long s21_shift_right_10(s21_decimal *value) {
     unsigned long long carry = 0;
 
     for (int i = 2; i >= 0; i--) {
@@ -36,29 +37,33 @@ void s21_shift_right_10(s21_decimal *value) {
         value->bits[i] = (unsigned int)(cur / 10);
         carry = cur % 10;
     }
+
+    return carry;
 }
 
-void s21_sub_one(s21_decimal *value) {
-    if (!value) return;
+int s21_add_one(s21_decimal *v) {
+    int status = SUCCESS;
 
-    if (value->bits[0] > 0) {
-        value->bits[0] += 1;
-        return;
+    if (!v) {
+        status = CALCULATION_ERROR;
+    } else if (v->bits[0] == 0xFFFFFFFF &&
+               v->bits[1] == 0xFFFFFFFF &&
+               v->bits[2] == 0xFFFFFFFF) {
+        status = CALCULATION_ERROR; // overflow
+    } else {
+        if (v->bits[0] < 0xFFFFFFFF) {
+            v->bits[0]++;
+        } else {
+            v->bits[0] = 0;
+
+            if (v->bits[1] < 0xFFFFFFFF) {
+                v->bits[1]++;
+            } else {
+                v->bits[1] = 0;
+                v->bits[2]++;
+            }
+        }
     }
 
-    value->bits[0] = 0xFFFFFFFF;
-
-    if (value->bits[1] > 0) {
-        value->bits[1] += 1;
-        return;
-    }
-
-    value->bits[1] = 0xFFFFFFFF;
-
-    if (value->bits[2] > 0) {
-        value->bits[2] += 1;
-        return;
-    }
-
-    value->bits[2] = 0xFFFFFFFF;
+    return status;
 }

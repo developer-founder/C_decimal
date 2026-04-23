@@ -1,11 +1,11 @@
 // #include "../../s21_decimal.h"
 
 // int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-//     int code = CALCULATION_ERROR;
+//     int status = CALCULATION_ERROR;
 
 //     if (dst) {
-//         code = SUCCESS;
+//         status = SUCCESS;
 //     }
 
-//     return code;
+//     return status;
 // }

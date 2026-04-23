@@ -20,11 +20,12 @@ $(NAME): $(OBJS)
 	ar rcs $@ $^
 
 
-test: $(NAME)
+test: $(NAME) clean
 	$(CC) $(CFLAGS) $(CHECK_CFLAGS) \
 	$(TEST_SRCS) $(SRCS) \
 	-o $(TEST_NAME) $(CHECK_LIBS)
 	./$(TEST_NAME)
+	
 
 
 gcov_report:
@@ -39,7 +40,7 @@ gcov_report:
 
 
 clean:
-	rm -rf $(OBJS) $(NAME) $(TEST_NAME) gcov_test \
+	rm -rf $(OBJS) $(NAME) $(TEST_NAME) s21_decimal.o gcov_test \
 	*.gcda *.gcno report report.info
 
 re: clean all

@@ -31,7 +31,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst);
 // === Другие функции ===
 int s21_negate(s21_decimal value, s21_decimal *result);
 int s21_truncate(s21_decimal value, s21_decimal *result);
-// int s21_round(s21_decimal value, s21_decimal *result);
+int s21_round(s21_decimal value, s21_decimal *result);
 int s21_floor(s21_decimal value, s21_decimal *result);
 
 void s21_zero(s21_decimal *value);
