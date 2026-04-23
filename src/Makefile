@@ -12,16 +12,13 @@ OBJS = $(SRCS:.c=.o)
 NAME = s21_decimal.a
 TEST_NAME = test
 
-# ---------------- ALL ----------------
 
 all: $(NAME)
 
-# ---------------- LIB ----------------
 
 $(NAME): $(OBJS)
 	ar rcs $@ $^
 
-# ---------------- TEST ----------------
 
 test: $(NAME)
 	$(CC) $(CFLAGS) $(CHECK_CFLAGS) \
@@ -29,7 +26,6 @@ test: $(NAME)
 	-o $(TEST_NAME) $(CHECK_LIBS)
 	./$(TEST_NAME)
 
-# ---------------- GCOV ----------------
 
 gcov_report:
 	$(CC) $(CFLAGS) --coverage \
@@ -41,7 +37,6 @@ gcov_report:
 	lcov -t "s21_decimal" -o report.info -c -d .
 	genhtml -o report report.info
 
-# ---------------- CLEAN ----------------
 
 clean:
 	rm -rf $(OBJS) $(NAME) $(TEST_NAME) gcov_test \

@@ -6,6 +6,8 @@ int main(void) {
 
     srunner_add_suite(sr, s21_from_int_to_decimal_suite());
     srunner_add_suite(sr, s21_negate_suite());
+    srunner_add_suite(sr, s21_truncate_suite());
+    srunner_add_suite(sr, s21_floor_suite());
 
     srunner_run_all(sr, CK_NORMAL);
     failed = srunner_ntests_failed(sr);
