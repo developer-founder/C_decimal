@@ -117,25 +117,22 @@ START_TEST(test_sub_abs_compare_less) {
 }
 END_TEST
 
-// ТЕСТ 4: Разные знаки с разными масштабами
 START_TEST(test_sub_opposite_signs_with_scale) {
   s21_decimal a = {{1234, 0, 0, 0}};  // +12.34 (scale 2)
   s21_decimal b = {{567, 0, 0, 0}};   // -5.67 (scale 2)
 
-  a.bits[3] = 2 << 16;                 // scale = 2
-  b.bits[3] = (2 << 16) | (1u << 31);  // scale = 2, sign = negative
+  a.bits[3] = 2 << 16;  // scale = 2
+  b.bits[3] = (2 << 16) | (1u << 31);
 
   s21_decimal res;
   s21_sub(a, b, &res);
 
-  // 12.34 - (-5.67) = 18.01
   ck_assert_int_eq(res.bits[0], 1801);
-  ck_assert_int_eq((res.bits[3] >> 16) & 0xFF, 2);  // scale = 2
-  ck_assert_int_eq((res.bits[3] >> 31) & 1, 0);     // положительный
+  ck_assert_int_eq((res.bits[3] >> 16) & 0xFF, 2);
+  ck_assert_int_eq((res.bits[3] >> 31) & 1, 0);
 }
 END_TEST
 
-// ТЕСТ 5: NULL указатель
 START_TEST(test_sub_null_result) {
   s21_decimal a = {{100, 0, 0, 0}};
   s21_decimal b = {{50, 0, 0, 0}};
@@ -146,43 +143,77 @@ START_TEST(test_sub_null_result) {
 }
 END_TEST
 
-// ТЕСТ 6: Сложный случай с разными масштабами и разными знаками (для покрытия
-// s21_add внутри s21_sub)
 START_TEST(test_sub_opposite_signs_diff_scales) {
-  s21_decimal a = {{1000, 0, 0, 0}};  // +10.00 (scale 2)
-  s21_decimal b = {{5, 0, 0, 0}};     // -0.5 (scale 1)
+  s21_decimal a = {{1000, 0, 0, 0}};
+  s21_decimal b = {{5, 0, 0, 0}};
 
-  a.bits[3] = 2 << 16;                 // scale = 2
-  b.bits[3] = (1 << 16) | (1u << 31);  // scale = 1, negative
+  a.bits[3] = 2 << 16;
+  b.bits[3] = (1 << 16) | (1u << 31);
 
   s21_decimal res;
   s21_sub(a, b, &res);
 
-  // 10.00 - (-0.5) = 10.50
   ck_assert_int_eq(res.bits[0], 1050);
 }
 END_TEST
 
-// Обновленная suite
+START_TEST(test_zero_null_pointer) {
+  s21_zero(NULL);
+  ck_assert_int_eq(1, 1);
+}
+END_TEST
+
+START_TEST(test_compare_scale_normalization) {
+  s21_decimal a = {{100, 0, 0, 0}};
+  s21_decimal b = {{10, 0, 0, 0}};
+
+  a.bits[3] = 2 << 16;
+  b.bits[3] = 1 << 16;
+
+  int ret = s21_compare(a, b);
+
+  ck_assert_int_eq(ret, 0);
+}
+END_TEST
+
+START_TEST(test_sub_abs_with_borrow) {
+  s21_decimal a = {{0, 1, 0, 0}};
+  s21_decimal b = {{1, 0, 0, 0}};
+  s21_decimal res = {{0, 0, 0, 0}};
+
+  s21_sub_abs(a, b, &res);
+
+  ck_assert_int_eq(res.bits[0], 4294967295u);
+  ck_assert_int_eq(res.bits[1], 0);
+}
+END_TEST
+
 Suite* s21_sub_suite(void) {
   Suite* s = suite_create("sub");
   TCase* tc = tcase_create("core");
 
-  // Существующие тесты
   tcase_add_test(tc, test_sub_simple);
   tcase_add_test(tc, test_sub_to_zero);
   tcase_add_test(tc, test_sub_negative_result);
   tcase_add_test(tc, test_sub_negative_minus_negative);
   tcase_add_test(tc, test_sub_scale);
 
-  // НОВЫЕ тесты для покрытия
-  tcase_add_test(tc, test_sub_positive_minus_negative);    // строки 14-15
-  tcase_add_test(tc, test_sub_negative_minus_positive);    // строки 14-15
-  tcase_add_test(tc, test_sub_abs_compare_less);           // строка 25
-  tcase_add_test(tc, test_sub_opposite_signs_with_scale);  // комбинация
-  tcase_add_test(tc, test_sub_null_result);  // строка 7 (result == NULL)
-  tcase_add_test(
-      tc, test_sub_opposite_signs_diff_scales);  // дополнительное покрытие
+  tcase_add_test(tc, test_sub_positive_minus_negative);
+  tcase_add_test(tc, test_sub_negative_minus_positive);
+  tcase_add_test(tc, test_sub_abs_compare_less);
+  tcase_add_test(tc, test_sub_opposite_signs_with_scale);
+  tcase_add_test(tc, test_sub_null_result);
+  tcase_add_test(tc, test_sub_opposite_signs_diff_scales);
+  tcase_add_test(tc, test_zero_null_pointer);
+  tcase_add_test(tc, test_compare_scale_normalization);
+  tcase_add_test(tc, test_sub_abs_with_borrow);
+
+  tcase_add_test(tc, test_sub_positive_minus_negative);
+  tcase_add_test(tc, test_sub_negative_minus_positive);
+  tcase_add_test(tc, test_sub_abs_compare_less);
+  tcase_add_test(tc, test_sub_opposite_signs_with_scale);
+  tcase_add_test(tc, test_sub_null_result);
+  tcase_add_test(tc, test_sub_opposite_signs_diff_scales);
 
   suite_add_tcase(s, tc);
   return s;
