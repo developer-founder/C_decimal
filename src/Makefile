@@ -38,6 +38,8 @@ gcov_report:
 	lcov -t "s21_decimal" -o report.info -c -d .
 	genhtml -o report report.info
 
+	open report/index.html
+
 
 clean:
 	rm -rf $(OBJS) $(NAME) $(TEST_NAME) s21_decimal.o gcov_test \
