@@ -23,7 +23,6 @@ void s21_set_scale(s21_decimal *value, int scale) {
     value->bits[3] &= ~(0xFF << 16);
     value->bits[3] |= (scale << 16);
 }
-// [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 int s21_get_scale(s21_decimal value) {
     return (value.bits[3] >> 16) & 0xFF; // маска 8 бит
@@ -49,7 +48,7 @@ int s21_add_one(s21_decimal *v) {
     } else if (v->bits[0] == 0xFFFFFFFF &&
                v->bits[1] == 0xFFFFFFFF &&
                v->bits[2] == 0xFFFFFFFF) {
-        status = CALCULATION_ERROR; // overflow
+        status = CALCULATION_ERROR;
     } else {
         if (v->bits[0] < 0xFFFFFFFF) {
             v->bits[0]++;
