@@ -25,7 +25,7 @@ void s21_set_scale(s21_decimal *value, int scale) {
 }
 
 int s21_get_scale(s21_decimal value) {
-    return (value.bits[3] >> 16) & 0xFF; // маска 8 бит
+    return (value.bits[3] >> 16) & 0xFF;
 }
 
 unsigned long long s21_shift_right_10(s21_decimal *value) {

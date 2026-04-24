@@ -66,6 +66,19 @@ START_TEST(test_floor_zero) {
 }
 END_TEST
 
+START_TEST(test_floor_negative_with_fraction_overflow) {
+    s21_decimal val = {{4294967295u, 4294967295u, 4294967295u, 0}};
+    val.bits[3] |= (1 << 16);
+    val.bits[3] |= (1u << 31);
+    
+    s21_decimal res;
+    
+    int ret = s21_floor(val, &res);
+    
+    ck_assert_int_eq(ret, CALCULATION_ERROR);
+}
+END_TEST
+
 Suite *s21_floor_suite(void) {
     Suite *s = suite_create("s21_floor");
     TCase *tc = tcase_create("core");
@@ -75,6 +88,7 @@ Suite *s21_floor_suite(void) {
     tcase_add_test(tc, test_floor_negative_with_fraction);
     tcase_add_test(tc, test_floor_negative_no_fraction);
     tcase_add_test(tc, test_floor_zero);
+    tcase_add_test(tc, test_floor_negative_with_fraction_overflow);
 
     suite_add_tcase(s, tc);
     return s;

@@ -60,6 +60,15 @@ START_TEST(test_negate_preserve_scale) {
 }
 END_TEST
 
+START_TEST(test_negate_null_pointer) {
+    s21_decimal value = {{100, 0, 0, 0}};
+    
+    int ret = s21_negate(value, NULL);
+    
+    ck_assert_int_eq(ret, CALCULATION_ERROR);
+}
+END_TEST
+
 Suite *s21_negate_suite(void) {
     Suite *s = suite_create("s21_negate");
     TCase *tc = tcase_create("core");
@@ -69,6 +78,7 @@ Suite *s21_negate_suite(void) {
     tcase_add_test(tc, test_negate_zero);
     tcase_add_test(tc, test_negate_negative_zero);
     tcase_add_test(tc, test_negate_preserve_scale);
+    tcase_add_test(tc, test_negate_null_pointer);
 
     suite_add_tcase(s, tc);
     return s;

@@ -76,6 +76,16 @@ START_TEST(test_truncate_preserve_sign_zero) {
 }
 END_TEST
 
+START_TEST(test_truncate_null_pointer) {
+    s21_decimal value = {{12345, 0, 0, 0}};
+    value.bits[3] = (2 << 16);  // scale = 2
+    
+    int ret = s21_truncate(value, NULL);
+    
+    ck_assert_int_eq(ret, CALCULATION_ERROR);
+}
+END_TEST
+
 Suite *s21_truncate_suite(void) {
     Suite *s = suite_create("s21_truncate");
     TCase *tc = tcase_create("core");
@@ -86,6 +96,7 @@ Suite *s21_truncate_suite(void) {
     tcase_add_test(tc, test_truncate_large_scale);
     tcase_add_test(tc, test_truncate_negative);
     tcase_add_test(tc, test_truncate_preserve_sign_zero);
+    tcase_add_test(tc, test_truncate_null_pointer);
 
     suite_add_tcase(s, tc);
     return s;
