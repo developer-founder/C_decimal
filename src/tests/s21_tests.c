@@ -11,6 +11,8 @@ int main(void) {
     srunner_add_suite(sr, s21_round_suite());
     srunner_add_suite(sr, s21_compare_suite());
     srunner_add_suite(sr, s21_conversion_suite());
+    srunner_add_suite(sr, s21_sub_suite());
+    srunner_add_suite(sr, s21_add_suite());
 
     srunner_run_all(sr, CK_NORMAL);
     failed = srunner_ntests_failed(sr);

@@ -13,5 +13,7 @@ Suite *s21_floor_suite(void);
 Suite *s21_round_suite(void);
 Suite *s21_compare_suite(void);
 Suite *s21_conversion_suite(void);
+Suite *s21_sub_suite(void);
+Suite *s21_add_suite(void);
 
 #endif

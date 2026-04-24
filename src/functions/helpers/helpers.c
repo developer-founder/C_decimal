@@ -127,3 +127,37 @@ int s21_compare(s21_decimal a, s21_decimal b) {
 
     return result;
 }
+
+int s21_abs_compare(s21_decimal a, s21_decimal b) {
+    for (int i = 2; i >= 0; i--) {
+        if (a.bits[i] != b.bits[i]) {
+            return (a.bits[i] > b.bits[i]) ? 1 : -1;
+        }
+    }
+    return 0;
+}
+
+int s21_sub_abs(s21_decimal a, s21_decimal b, s21_decimal *res) {
+    unsigned long long borrow = 0;
+
+    for (int i = 0; i < 3; i++) {
+        unsigned long long x = a.bits[i];
+        unsigned long long y = b.bits[i] + borrow;
+
+        if (x < y) {
+            res->bits[i] = (unsigned int)((1ULL << 32) + x - y);
+            borrow = 1;
+        } else {
+            res->bits[i] = (unsigned int)(x - y);
+            borrow = 0;
+        }
+    }
+
+    return 0;
+}
+
+void s21_negate_internal(s21_decimal *v) {
+    if (v) {
+        v->bits[3] ^= (1u << 31);
+    }
+}

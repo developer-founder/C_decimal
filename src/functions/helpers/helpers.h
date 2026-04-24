@@ -12,5 +12,8 @@ unsigned long long s21_shift_right_10(s21_decimal *value);
 int s21_add_one(s21_decimal *value);
 int s21_mul_10(s21_decimal *value);
 int s21_compare(s21_decimal a, s21_decimal b);
+int s21_abs_compare(s21_decimal a, s21_decimal b);
+int s21_sub_abs(s21_decimal a, s21_decimal b, s21_decimal *res);
+void s21_negate_internal(s21_decimal *v);
 
 #endif
