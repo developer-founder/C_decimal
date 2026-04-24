@@ -1,4 +1,5 @@
 #include "../../s21_decimal.h"
+#include "../helpers/helpers.h"
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     int status = CALCULATION_ERROR;

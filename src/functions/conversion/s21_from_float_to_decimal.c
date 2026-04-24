@@ -1,4 +1,5 @@
 #include "../../s21_decimal.h"
+#include "../helpers/helpers.h"
 #include <math.h>
 #include <float.h>
 

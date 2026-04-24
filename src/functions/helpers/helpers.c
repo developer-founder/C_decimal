@@ -66,3 +66,64 @@ int s21_add_one(s21_decimal *v) {
 
     return status;
 }
+
+int s21_mul_10(s21_decimal *v) {
+    int status = 0;
+
+    if (!v) {
+        status = 1;
+    } else {
+        unsigned long long carry = 0;
+
+        for (int i = 0; i < 3; i++) {
+            unsigned long long cur =
+                (unsigned long long)v->bits[i] * 10 + carry;
+
+            v->bits[i] = (unsigned int)cur;
+            carry = cur >> 32;
+        }
+
+        if (carry) {
+            status = 1;
+        }
+    }
+
+    return status;
+}
+
+int s21_compare(s21_decimal a, s21_decimal b) {
+    int result = 0;
+
+    int sign_a = s21_get_sign(a);
+    int sign_b = s21_get_sign(b);
+
+    if (sign_a != sign_b) {
+        result = sign_a ? -1 : 1;
+    } else {
+        int scale_a = s21_get_scale(a);
+        int scale_b = s21_get_scale(b);
+
+        while (scale_a < scale_b) {
+            s21_mul_10(&a);
+            scale_a++;
+        }
+
+        while (scale_b < scale_a) {
+            s21_mul_10(&b);
+            scale_b++;
+        }
+
+        for (int i = 2; i >= 0; i--) {
+            if (a.bits[i] != b.bits[i]) {
+                if (sign_a == 0)
+                    result = (a.bits[i] > b.bits[i]) ? 1 : -1;
+                else
+                    result = (a.bits[i] > b.bits[i]) ? -1 : 1;
+
+                break;
+            }
+        }
+    }
+
+    return result;
+}
