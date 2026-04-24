@@ -12,6 +12,9 @@
 #define SUCCESS 0
 #define CALCULATION_ERROR 1
 
+#define INT_MAX 2147483647
+#define INT_MIN -2147483648
+
 typedef struct {
     unsigned int bits[4];
 } s21_decimal;
