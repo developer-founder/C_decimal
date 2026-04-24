@@ -12,6 +12,7 @@ OBJS = $(SRCS:.c=.o)
 NAME = s21_decimal.a
 TEST_NAME = test
 
+STYLE_FILES = $(SRCS) $(TEST_SRCS) s21_decimal.h
 
 all: $(NAME)
 
@@ -41,6 +42,11 @@ gcov_report:
 
 	open report/index.html
 
+check_style:
+	clang-format -n -style=Google $(STYLE_FILES)
+
+fix_style:
+	clang-format -i -style=Google $(STYLE_FILES)
 
 clean:
 	rm -rf $(OBJS) $(NAME) $(TEST_NAME) s21_decimal.o gcov_test \
