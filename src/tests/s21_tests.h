@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "../s21_decimal.h"
+#include "../functions/helpers/helpers.h"
 
 Suite *s21_from_int_to_decimal_suite(void);
 Suite *s21_negate_suite(void);

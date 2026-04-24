@@ -162,6 +162,40 @@ START_TEST(test_sub_opposite_signs_diff_scales) {
 }
 END_TEST
 
+START_TEST(test_zero_null_pointer) {
+    s21_zero(NULL);
+    // Просто проверяем, что не упало
+    ck_assert_int_eq(1, 1);
+}
+END_TEST
+
+START_TEST(test_compare_scale_normalization) {
+    s21_decimal a = {{100, 0, 0, 0}};  // 1.00
+    s21_decimal b = {{10, 0, 0, 0}};   // 1.0
+    
+    a.bits[3] = 2 << 16;  // scale = 2
+    b.bits[3] = 1 << 16;  // scale = 1
+    
+    // 1.00 и 1.0 должны быть равны
+    int ret = s21_compare(a, b);
+    
+    ck_assert_int_eq(ret, 0);
+}
+END_TEST
+
+START_TEST(test_sub_abs_with_borrow) {
+    s21_decimal a = {{0, 1, 0, 0}};  // 4294967296
+    s21_decimal b = {{1, 0, 0, 0}};   // 1
+    s21_decimal res = {{0, 0, 0, 0}};
+    
+    s21_sub_abs(a, b, &res);
+    
+    // 4294967296 - 1 = 4294967295
+    ck_assert_int_eq(res.bits[0], 4294967295u);
+    ck_assert_int_eq(res.bits[1], 0);
+}
+END_TEST
+
 // Обновленная suite
 Suite *s21_sub_suite(void) {
     Suite *s = suite_create("sub");
@@ -181,6 +215,9 @@ Suite *s21_sub_suite(void) {
     tcase_add_test(tc, test_sub_opposite_signs_with_scale);   // комбинация
     tcase_add_test(tc, test_sub_null_result);                 // строка 7 (result == NULL)
     tcase_add_test(tc, test_sub_opposite_signs_diff_scales);  // дополнительное покрытие
+    tcase_add_test(tc, test_zero_null_pointer);               // тест для s21_zero
+    tcase_add_test(tc, test_compare_scale_normalization);    // тест для s21_compare
+    tcase_add_test(tc, test_sub_abs_with_borrow);           // тест для s21_sub_abs с заимствованием
 
     suite_add_tcase(s, tc);
     return s;

@@ -168,6 +168,38 @@ START_TEST(test_add_overflow) {
 }
 END_TEST
 
+START_TEST(test_add_one_max_value) {
+    s21_decimal val = {{4294967295u, 4294967295u, 4294967295u, 0}};
+    
+    int ret = s21_add_one(&val);
+    
+    ck_assert_int_eq(ret, CALCULATION_ERROR);
+}
+END_TEST
+
+START_TEST(test_add_one_carry_between_bits) {
+    s21_decimal val = {{4294967295u, 0, 0, 0}};
+    
+    int ret = s21_add_one(&val);
+    
+    ck_assert_int_eq(ret, SUCCESS);
+    ck_assert_int_eq(val.bits[0], 0);
+    ck_assert_int_eq(val.bits[1], 1);
+}
+END_TEST
+
+START_TEST(test_add_one_carry_to_bit2) {
+    s21_decimal val = {{4294967295u, 4294967295u, 0, 0}};
+    
+    int ret = s21_add_one(&val);
+    
+    ck_assert_int_eq(ret, SUCCESS);
+    ck_assert_int_eq(val.bits[0], 0);
+    ck_assert_int_eq(val.bits[1], 0);
+    ck_assert_int_eq(val.bits[2], 1);
+}
+END_TEST
+
 Suite *s21_add_suite(void) {
     Suite *s = suite_create("add");
     TCase *tc = tcase_create("core");
@@ -185,6 +217,9 @@ Suite *s21_add_suite(void) {
     tcase_add_test(tc, test_add_scale2_less_than_scale1);
     tcase_add_test(tc, test_add_opposite_sign_second_larger_abs);
     tcase_add_test(tc, test_add_overflow);
+    tcase_add_test(tc, test_add_one_max_value);
+    tcase_add_test(tc, test_add_one_carry_between_bits);
+    tcase_add_test(tc, test_add_one_carry_to_bit2);
 
     suite_add_tcase(s, tc);
     return s;
