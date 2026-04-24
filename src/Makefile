@@ -35,7 +35,8 @@ gcov_report:
 
 	./gcov_test
 
-	lcov -t "s21_decimal" -o report.info -c -d .
+	lcov -t "s21_decimal" -o report.info -c -d . --no-external
+
 	genhtml -o report report.info
 
 	open report/index.html
